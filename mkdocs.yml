@@ -1,0 +1,42 @@
+site_name: 雷的部落格威力缩小版
+site_description: 编程笔记
+site_url: https://www.leiex.com
+
+theme:
+  name: material
+  palette:
+    # 浅色模式
+    - scheme: default
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+
+    # 深色模式
+    - scheme: slate
+      primary: blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  language: zh
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    
+plugins:
+  - search
+  - awesome-nav
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
