@@ -1,5 +1,5 @@
-site_name: 雷的部落格威力缩小版
-site_description: 编程笔记
+site_name: Lee的小破网站
+site_description: 编程笔记整理
 site_url: https://www.leiex.com
 
 theme:
@@ -22,16 +22,22 @@ theme:
         name: 切换到浅色模式
   language: zh
   features:
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.tabs
-    - navigation.sections
-    - navigation.expand
     - navigation.indexes
+    - navigation.tabs
+    - navigation.tabs.sticky
     
 plugins:
   - search
-  - awesome-nav
+  - blog:
+      blog_dir: blog
+      post_dir: "{blog}/posts"
+      authors: true
+      author_files: "{blog}/.authors.yml"
+      authors_profiles: true
+      authors_profiles_name: 关于我
+      categories: true
+      pagination: true
+      pagination_per_page: 10
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -40,3 +46,8 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.superfences
+  
+nav:
+  - 首页: index.md
+  - 博客: 
+    - blog/index.md
