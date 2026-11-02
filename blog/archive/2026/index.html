@@ -1786,11 +1786,31 @@
     <h2 id="wslllamacppcudanvidiacuda"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/">WSL环境下，编译llama.cpp+CUDA，在老Nvidia显卡下实现CUDA加速</a></h2>
 <h3 id="_1"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#_1">硬件环境</a></h3>
 <ul>
-<li>硬件情况
-  | CPU  | Intel Core i5-8300H @ 2.30G Hz |     |     |     |     |     |     |     |     |
-  | ---- | ------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- |
-  | GPU  | Nvidia Quadro P600 @ 4G显存    |     |     |     |     |     |     |     |     |
-  | 内存 | 16G                            |     |     |     |     |     |     |     |     |</li>
+<li>硬件情况</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>硬件类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>Intel Core i5-8300H @ 2.30G Hz</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Nvidia Quadro P600, 4G显存</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>16G</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>Host系统：Windows 10 22H2 专业版</li>
 <li>WSL系统：CentOS 10 Stream x86_64</li>
 <li>CUDA版本：12.4</li>
@@ -1806,56 +1826,66 @@
 <li>解压好源码后，先不着急编译，先从https://github.com/ggml-org/llama.cpp/releases下载官方预先生成的UI文件，解压到源码目录下的<code>tools/ui</code>内，并重命名为dist，否则编译时，由于无法直接从hf下载UI文件会导致无WEB UI</li>
 <li>编译Rlease版本文件命令如下：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DGGML_CUDA<span class="o">=</span>ON<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/usr/local/llama.cpp<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DGGML_CUDA<span class="o">=</span>ON<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/usr/local/llama.cpp<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release
 </span></code></pre></div>
 <ul>
 <li>经过漫长的等待后，安装好编译后的文件：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>cmake<span class="w"> </span>--install<span class="w"> </span>build
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>cmake<span class="w"> </span>--install<span class="w"> </span>build
 </span></code></pre></div>
 <h3 id="_4"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#_4">运行&amp;验证</a></h3>
 <ul>
 <li>由于llama.cpp的二进制文件依赖自己的lib，因此需要将安装路径下的lib64目录加入至LD_LIBRARY_PATH（或运行时设置也可以）：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64
 </span></code></pre></div>
 <ul>
 <li>运行以下命令验证是否取到了可用的CUDA役备：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--list-devices
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--list-devices
 </span></code></pre></div>
 <p>这里输出，表示取到了可用于CUDA运行的设备：</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Available devices:
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  CUDA0: Quadro P600 (4095 MiB, 3374 MiB free)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Available devices:
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  CUDA0: Quadro P600 (4095 MiB, 3374 MiB free)
 </span></code></pre></div>
 <ul>
 <li>实际运行时，推荐用models-dir的方式运行，并针对模型提供量化参数（不同类型模型不一样，我这里用的QWen系）：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--models-dir<span class="w"> </span>/home/llama/models<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">11434</span><span class="w"> </span>--no-models-autoload<span class="w"> </span>-ngl<span class="w"> </span><span class="m">999</span><span class="w"> </span>--jinja<span class="w"> </span>--api-key<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--ctx-size<span class="w"> </span><span class="m">32768</span><span class="w"> </span>-ctk<span class="w"> </span>q8_0<span class="w"> </span>-ctv<span class="w"> </span>q8_0
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--models-dir<span class="w"> </span>/home/llama/models<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">11434</span><span class="w"> </span>--no-models-autoload<span class="w"> </span>-ngl<span class="w"> </span><span class="m">999</span><span class="w"> </span>--jinja<span class="w"> </span>--api-key<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--ctx-size<span class="w"> </span><span class="m">32768</span><span class="w"> </span>-ctk<span class="w"> </span>q8_0<span class="w"> </span>-ctv<span class="w"> </span>q8_0<span class="w"> </span>--tools<span class="w"> </span>all
 </span></code></pre></div>
 <h3 id="tips"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#tips">Tips</a></h3>
 <h4 id="vulkan"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#vulkan">关于Vulkan</a></h4>
 <ul>
 <li>官方编译的版本就能很好的支持Vulkan设备，如果需要自己编译，需安装好对应的依赖：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>gcc-c++<span class="w"> </span>vulkan-devel<span class="w"> </span>glslc<span class="w"> </span>glslang
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>git<span class="w"> </span>cmake<span class="w"> </span>gcc-c++<span class="w"> </span>vulkan-devel<span class="w"> </span>glslc<span class="w"> </span>glslang
 </span></code></pre></div>
 <ul>
 <li>安装好后，运行以下命令确认vulkan环境是否达到llama.cpp要求（apiVersion需要大于等于1.2）：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vulkaninfo<span class="p">|</span>grep<span class="w"> </span>apiVersion
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vulkaninfo<span class="p">|</span>grep<span class="w"> </span>apiVersion
 </span></code></pre></div>
 <ul>
 <li>编译时，用<code>GGML_VULKAN=ON</code>开启vulkan：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DGGML_VULKAN<span class="o">=</span>ON<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/usr/local/llama.cpp
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DGGML_VULKAN<span class="o">=</span>ON<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/usr/local/llama.cpp
 </span></code></pre></div>
-<h4 id="-no-models-autoloadmodelweb-uibat"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#-no-models-autoloadmodelweb-uibat">使用<code>--no-models-autoload</code>参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）</a></h4>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nb">set</span><span class="w"> </span><span class="s2">"model_name=qwen2.5-coder-1.5b-instruct-q4_k_m"</span>
-</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="k">if</span><span class="w"> </span>not<span class="w"> </span><span class="s2">"%~1"</span><span class="o">==</span><span class="s2">""</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">model_name</span><span class="o">=</span>%~1<span class="s2">"</span>
-</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
-</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="s2">curl -X POST http://127.0.0.1:11434/models/load -H "</span>Content-Type:<span class="w"> </span>application/json<span class="s2">" -H "</span>Authorization:<span class="w"> </span>Bearer<span class="w"> </span><span class="m">12345678</span><span class="s2">" -d "</span><span class="o">{</span><span class="se">\"</span>model<span class="se">\"</span>:<span class="w"> </span><span class="se">\"</span>%model_name%<span class="se">\"</span><span class="o">}</span><span class="s2">"</span>
+<h4 id="_5"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#_5">内置工具</a></h4>
+<p>可以使用<code>--tools all</code>启用内部工具，在自带的WEB UI中进行文件读写等功能</p>
+<h4 id="_6"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#_6">模型目录</a></h4>
+<p>使用<code>--no-models-autoload</code>参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nb">set</span><span class="w"> </span><span class="s2">"model_name=qwen2.5-coder-1.5b-instruct-q4_k_m"</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="k">if</span><span class="w"> </span>not<span class="w"> </span><span class="s2">"%~1"</span><span class="o">==</span><span class="s2">""</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">model_name</span><span class="o">=</span>%~1<span class="s2">"</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="s2">curl -X POST http://127.0.0.1:11434/models/load -H "</span>Content-Type:<span class="w"> </span>application/json<span class="s2">" -H "</span>Authorization:<span class="w"> </span>Bearer<span class="w"> </span><span class="m">12345678</span><span class="s2">" -d "</span><span class="o">{</span><span class="se">\"</span>model<span class="se">\"</span>:<span class="w"> </span><span class="se">\"</span>%model_name%<span class="se">\"</span><span class="o">}</span><span class="s2">"</span>
 </span></code></pre></div>
+<h4 id="_7"><a class="toclink" href="../../2026/10/30/wsl%E7%8E%AF%E5%A2%83%E4%B8%8B%E7%BC%96%E8%AF%91llamacppcuda%E5%9C%A8%E8%80%81nvidia%E6%98%BE%E5%8D%A1%E4%B8%8B%E5%AE%9E%E7%8E%B0cuda%E5%8A%A0%E9%80%9F/#_7">设置共享链接库路径，简化启动命令</a></h4>
+<p>将<code>/usr/local/llama.cpp/lib64</code>加入至ldconfig中，以后就不用每次指定LD_LIBRARY_PATH了
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># 创建配置文件并写入路径</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"/usr/local/llama.cpp/lib64“ | sudo tee /etc/ld.so.conf.d/llama.cpp.conf</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="s2"># 更新动态链接库缓存</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="s2">sudo ldconfig</span>
+</span></code></pre></div></p>
     
     
   </div>

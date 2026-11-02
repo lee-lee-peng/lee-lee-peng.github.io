@@ -1087,10 +1087,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#-no-models-autoloadmodelweb-uibat" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        使用--no-models-autoload参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）
+        内置工具
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模型目录
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设置共享链接库路径，简化启动命令
       
     </span>
   </a>
@@ -1207,11 +1229,31 @@
 <h1 id="wslllamacppcudanvidiacuda">WSL环境下，编译llama.cpp+CUDA，在老Nvidia显卡下实现CUDA加速</h1>
 <h2 id="_1">硬件环境</h2>
 <ul>
-<li>硬件情况
-  | CPU  | Intel Core i5-8300H @ 2.30G Hz |     |     |     |     |     |     |     |     |
-  | ---- | ------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- |
-  | GPU  | Nvidia Quadro P600 @ 4G显存    |     |     |     |     |     |     |     |     |
-  | 内存 | 16G                            |     |     |     |     |     |     |     |     |</li>
+<li>硬件情况</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>硬件类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>Intel Core i5-8300H @ 2.30G Hz</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>Nvidia Quadro P600, 4G显存</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>16G</td>
+</tr>
+</tbody>
+</table>
+<ul>
 <li>Host系统：Windows 10 22H2 专业版</li>
 <li>WSL系统：CentOS 10 Stream x86_64</li>
 <li>CUDA版本：12.4</li>
@@ -1252,7 +1294,7 @@
 <ul>
 <li>实际运行时，推荐用models-dir的方式运行，并针对模型提供量化参数（不同类型模型不一样，我这里用的QWen系）：</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--models-dir<span class="w"> </span>/home/llama/models<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">11434</span><span class="w"> </span>--no-models-autoload<span class="w"> </span>-ngl<span class="w"> </span><span class="m">999</span><span class="w"> </span>--jinja<span class="w"> </span>--api-key<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--ctx-size<span class="w"> </span><span class="m">32768</span><span class="w"> </span>-ctk<span class="w"> </span>q8_0<span class="w"> </span>-ctv<span class="w"> </span>q8_0
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/usr/local/llama.cpp/lib64<span class="w"> </span>/usr/local/llama.cpp/bin/llama-server<span class="w"> </span>--models-dir<span class="w"> </span>/home/llama/models<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">11434</span><span class="w"> </span>--no-models-autoload<span class="w"> </span>-ngl<span class="w"> </span><span class="m">999</span><span class="w"> </span>--jinja<span class="w"> </span>--api-key<span class="w"> </span><span class="m">12345678</span><span class="w"> </span>--ctx-size<span class="w"> </span><span class="m">32768</span><span class="w"> </span>-ctk<span class="w"> </span>q8_0<span class="w"> </span>-ctv<span class="w"> </span>q8_0<span class="w"> </span>--tools<span class="w"> </span>all
 </span></code></pre></div>
 <h2 id="tips">Tips</h2>
 <h3 id="vulkan">关于Vulkan</h3>
@@ -1271,12 +1313,22 @@
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DGGML_VULKAN<span class="o">=</span>ON<span class="w"> </span>-DCMAKE_INSTALL_PREFIX<span class="o">=</span>/usr/local/llama.cpp
 </span></code></pre></div>
-<h3 id="-no-models-autoloadmodelweb-uibat">使用<code>--no-models-autoload</code>参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）</h3>
+<h3 id="_5">内置工具</h3>
+<p>可以使用<code>--tools all</code>启用内部工具，在自带的WEB UI中进行文件读写等功能</p>
+<h3 id="_6">模型目录</h3>
+<p>使用<code>--no-models-autoload</code>参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">set</span><span class="w"> </span><span class="s2">"model_name=qwen2.5-coder-1.5b-instruct-q4_k_m"</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">if</span><span class="w"> </span>not<span class="w"> </span><span class="s2">"%~1"</span><span class="o">==</span><span class="s2">""</span><span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nv">model_name</span><span class="o">=</span>%~1<span class="s2">"</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">curl -X POST http://127.0.0.1:11434/models/load -H "</span>Content-Type:<span class="w"> </span>application/json<span class="s2">" -H "</span>Authorization:<span class="w"> </span>Bearer<span class="w"> </span><span class="m">12345678</span><span class="s2">" -d "</span><span class="o">{</span><span class="se">\"</span>model<span class="se">\"</span>:<span class="w"> </span><span class="se">\"</span>%model_name%<span class="se">\"</span><span class="o">}</span><span class="s2">"</span>
 </span></code></pre></div>
+<h3 id="_7">设置共享链接库路径，简化启动命令</h3>
+<p>将<code>/usr/local/llama.cpp/lib64</code>加入至ldconfig中，以后就不用每次指定LD_LIBRARY_PATH了
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 创建配置文件并写入路径</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"/usr/local/llama.cpp/lib64“ | sudo tee /etc/ld.so.conf.d/llama.cpp.conf</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s2"># 更新动态链接库缓存</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s2">sudo ldconfig</span>
+</span></code></pre></div></p>
 
 
 
