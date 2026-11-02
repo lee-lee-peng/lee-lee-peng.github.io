@@ -14,10 +14,13 @@ tages:
 ## 硬件环境
 
 - 硬件情况
-  | CPU  | Intel Core i5-8300H @ 2.30G Hz |     |     |     |     |     |     |     |     |
-  | ---- | ------------------------------ | --- | --- | --- | --- | --- | --- | --- | --- |
-  | GPU  | Nvidia Quadro P600 @ 4G显存    |     |     |     |     |     |     |     |     |
-  | 内存 | 16G                            |     |     |     |     |     |     |     |     |
+
+| 硬件类型 | 说明                           |
+| -------- | ------------------------------ |
+| CPU      | Intel Core i5-8300H @ 2.30G Hz |
+| GPU      | Nvidia Quadro P600, 4G显存     |
+| 内存     | 16G                            |
+
 - Host系统：Windows 10 22H2 专业版
 - WSL系统：CentOS 10 Stream x86_64
 - CUDA版本：12.4
@@ -67,7 +70,7 @@ Available devices:
 - 实际运行时，推荐用models-dir的方式运行，并针对模型提供量化参数（不同类型模型不一样，我这里用的QWen系）：
 
 ```bash
-LD_LIBRARY_PATH=/usr/local/llama.cpp/lib64 /usr/local/llama.cpp/bin/llama-server --models-dir /home/llama/models --host 0.0.0.0 --port 11434 --no-models-autoload -ngl 999 --jinja --api-key 12345678 --ctx-size 32768 -ctk q8_0 -ctv q8_0
+LD_LIBRARY_PATH=/usr/local/llama.cpp/lib64 /usr/local/llama.cpp/bin/llama-server --models-dir /home/llama/models --host 0.0.0.0 --port 11434 --no-models-autoload -ngl 999 --jinja --api-key 12345678 --ctx-size 32768 -ctk q8_0 -ctv q8_0 --tools all
 ```
 
 ## Tips
@@ -92,11 +95,23 @@ vulkaninfo|grep apiVersion
 cmake -B build -DGGML_VULKAN=ON -DCMAKE_INSTALL_PREFIX=/usr/local/llama.cpp
 ```
 
-### 使用`--no-models-autoload`参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）
+### 内置工具
+可以使用```--tools all```启用内部工具，在自带的WEB UI中进行文件读写等功能
+
+### 模型目录
+使用`--no-models-autoload`参数时，是不会自动载入model的，需要手动调一下接口（WEB UI也能操作），写了个小脚本（BAT）
 
 ```bash
 set "model_name=qwen2.5-coder-1.5b-instruct-q4_k_m"
 if not "%~1"=="" set model_name=%~1"
 
 curl -X POST http://127.0.0.1:11434/models/load -H "Content-Type: application/json" -H "Authorization: Bearer 12345678" -d "{\"model\": \"%model_name%\"}"
+```
+### 设置共享链接库路径，简化启动命令
+将```/usr/local/llama.cpp/lib64```加入至ldconfig中，以后就不用每次指定LD_LIBRARY_PATH了
+```bash
+# 创建配置文件并写入路径
+echo "/usr/local/llama.cpp/lib64“ | sudo tee /etc/ld.so.conf.d/llama.cpp.conf
+# 更新动态链接库缓存
+sudo ldconfig
 ```
