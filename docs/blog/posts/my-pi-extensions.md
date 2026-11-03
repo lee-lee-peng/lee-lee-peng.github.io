@@ -37,6 +37,8 @@ pi list
 
 - npm:pi-lens，**重要**，LSP诊断，自动修复文件，注入相关消息至上下文
 - npm:pi-web-access，如字面意思，接入MCP服务器，搜索网络上的信息等，部分服务需配置key
+- npm:pi-cc-compaction，在 Pi 里复刻 Claude Code 的上下文压缩：摘要请求复用提示缓存，阈值和提示词与 Claude Code 一致，空闲时趁缓存未过期先压缩
+- npm:pi-cache-optimizer，**省钱用**，用于提升 Pi 中 provider 侧 KV Cache / Prompt Cache 命中率的扩展
 
 ## 杂项
 
